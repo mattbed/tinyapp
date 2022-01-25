@@ -11,6 +11,7 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+// random string generator for shortURL
 function generateRandomString() {
   const characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
   let randomString;
@@ -25,37 +26,50 @@ function generateRandomString() {
   return randomString;
 };
 
+// home page get
 app.get("/", (req, res) => {
   res.send("Hello!");
 });
 
+// create new URLs page get
 app.get("/urls", (req, res) => {
   const templateVars = { urls: urlDatabase };
   res.render("urls_index", templateVars);
 });
 
+// list of new URLs page get
 app.get("/urls/new", (req, res) => {
   res.render("urls_new");
 });
 
+// create new URLs page post
 app.post("/urls", (req, res) => {
-  console.log(req.body);  // Log the POST request body to the console
+  const longURLObj = req.body;
+  if (!longURLObj['longURL'].includes("http://")) {
+    longURLObj['longURL'] = "http://" + longURLObj['longURL'];
+  }
+  const shortURL = generateRandomString();
+  urlDatabase[shortURL] = longURLObj['longURL'];
   res.send("Ok");         // Respond with 'Ok' (we will replace this)
 });
 
+// 
 app.get("/urls/:shortURL", (req, res) => {
   const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] };
   res.render("urls_show", templateVars);
 });
 
+// 
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
 });
 
+// trash?
 app.get("/hello", (req, res) => {
   res.send("<html><body>Hello <b>World</b></body></html>\n");
 });
 
+//
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}~`);
 });
