@@ -50,13 +50,19 @@ app.post("/urls", (req, res) => {
   }
   const shortURL = generateRandomString();
   urlDatabase[shortURL] = longURLObj['longURL'];
-  res.send("Ok");         // Respond with 'Ok' (we will replace this)
+  res.redirect(`/urls/${shortURL}`);
 });
 
-// 
+// individual newly created URLs page get
 app.get("/urls/:shortURL", (req, res) => {
   const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] };
   res.render("urls_show", templateVars);
+});
+
+// redirects short URLs to their longURLs
+app.get("/u/:shortURL", (req, res) => {
+  const longURL = urlDatabase[req.params.shortURL];
+  res.redirect(longURL);
 });
 
 // 
