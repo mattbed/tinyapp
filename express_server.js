@@ -37,11 +37,6 @@ app.get("/urls", (req, res) => {
   res.render("urls_index", templateVars);
 });
 
-// list of new URLs page get
-app.get("/urls/new", (req, res) => {
-  res.render("urls_new");
-});
-
 // create new URLs page post
 app.post("/urls", (req, res) => {
   const longURLObj = req.body;
@@ -52,6 +47,17 @@ app.post("/urls", (req, res) => {
   urlDatabase[shortURL] = longURLObj['longURL'];
   res.redirect(`/urls/${shortURL}`);
 });
+
+// list of new URLs page get
+app.get("/urls/new", (req, res) => {
+  res.render("urls_new");
+});
+
+// delete URLs page post
+app.post("/urls/:shortURL/delete", (req, res) => {
+  delete urlDatabase[req.params.shortURL];
+  res.redirect("/urls");
+})
 
 // individual newly created URLs page get
 app.get("/urls/:shortURL", (req, res) => {
@@ -65,7 +71,7 @@ app.get("/u/:shortURL", (req, res) => {
   res.redirect(longURL);
 });
 
-// 
+// trash? 
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
 });
