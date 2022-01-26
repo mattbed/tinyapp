@@ -2,6 +2,8 @@ const bodyParser = require("body-parser");
 const express = require("express");
 const app = express();
 const PORT = 8080;
+const cookieParser = require('cookie-parser');
+app.use(cookieParser());
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
@@ -29,6 +31,13 @@ function generateRandomString() {
 // home page get
 app.get("/", (req, res) => {
   res.send("Hello!");
+});
+
+// username login field post
+app.post("/login", (req, res) => {
+  const username = req.body;
+  res.cookie('username', username);
+  res.redirect("/urls");
 });
 
 // create new URLs page get
