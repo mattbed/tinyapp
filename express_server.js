@@ -61,12 +61,12 @@ app.get("/", (req, res) => {
 });
 
 // username login field post
-app.post("/login", (req, res) => {
+//app.post("/login", (req, res) => {
   // const templateVars = {
   //   user: users.id,
   // };
-  res.redirect("/urls", templateVars);
-});
+//  res.redirect("/urls", templateVars);
+//});
 
 // username logout field post
 app.post("/logout", (req, res) => {
@@ -96,6 +96,14 @@ app.post("/register", (req, res) => {
   users.id = { id, email, password };
   res.cookie('user_id', users.id);
   res.redirect("/urls");
+});
+
+// login page get
+app.get("/login", (req, res) => {
+  const templateVars = {
+    user: req.cookies["user_id"],
+  };
+  res.render("login", templateVars);
 });
 
 // create new URLs page get
