@@ -84,8 +84,11 @@ app.get("/register", (req, res) => {
 
 // register page post
 app.post("/register", (req, res) => {
+  if (!(req.body.email && req.body.password)) {
+    return res.status(400).send('Please enter a valid email and password');
+  }
   if (emailLookup(req.body.email)) {
-    res.status(400).send('Email is already registered')
+    return res.status(400).send('Email is already registered');
   }
   const id = generateRandomString();
   const email = req.body.email;
