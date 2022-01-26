@@ -57,9 +57,20 @@ app.get("/urls/new", (req, res) => {
 app.post("/urls/:shortURL/delete", (req, res) => {
   delete urlDatabase[req.params.shortURL];
   res.redirect("/urls");
-})
+});
 
-// individual newly created URLs page get
+// update existing url Edit page
+app.post("/urls/:shortURL", (req, res) => {
+  const longURLObj = req.body;
+  if (!longURLObj['longURL'].includes("http://")) {
+    longURLObj['longURL'] = "http://" + longURLObj['longURL'];
+  }
+  console.log(req.params.shortURL);
+  urlDatabase[req.params.shortURL] = longURLObj['longURL'];
+  res.redirect(`/urls/${req.params.shortURL}`);
+});
+
+// Edit URLs page get
 app.get("/urls/:shortURL", (req, res) => {
   const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] };
   res.render("urls_show", templateVars);

@@ -16,7 +16,7 @@
       <p class="card-text"><strong>Short URL: <a href="/u/<%= shortURL %>"><%= shortURL %></a></strong></p>
     </div>
   <div class="card-footer text-muted text-center"><h3><strong>Edit</strong></h3>
-    <form class="form-inline justify-content-center" action="/urls" method="POST"><h5 >New URL:<input class="form-control" type="text" name="longURL" placeholder=<%= longURL %> style="width: 300px; margin: 1em">
+    <form class="form-inline justify-content-center" action="/urls/<%=shortURL%>" method="POST"><h5 >New URL:<input class="form-control" type="text" name="longURL" placeholder="http://" style="width: 300px; margin: 1em">
     <button type="submit" class="btn btn-primary">Submit</button></h5></form></div>
   </div>
   </main>
