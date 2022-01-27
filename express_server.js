@@ -60,6 +60,17 @@ app.get("/", (req, res) => {
   res.send("Hello!");
 });
 
+// login page get
+app.get("/login", (req, res) => {
+  if (req.cookies["user_id"]) {
+    return res.redirect("/urls");
+  };
+  const templateVars = {
+    user: req.cookies["user_id"],
+  };
+  res.render("login", templateVars);
+});
+
 // user login field post
 app.post("/login", (req, res) => {
   userID = emailLookup(req.body.email);
@@ -80,6 +91,9 @@ app.post("/logout", (req, res) => {
 
 // register page get
 app.get("/register", (req, res) => {
+  if (req.cookies["user_id"]) {
+    return res.redirect("/urls");
+  };
   const templateVars = {
     user: req.cookies["user_id"],
   };
@@ -100,14 +114,6 @@ app.post("/register", (req, res) => {
   users[id] = { id, email, password };
   res.cookie('user_id', users[id]);
   res.redirect("/urls");
-});
-
-// login page get
-app.get("/login", (req, res) => {
-  const templateVars = {
-    user: req.cookies["user_id"],
-  };
-  res.render("login", templateVars);
 });
 
 // create new URLs page get
