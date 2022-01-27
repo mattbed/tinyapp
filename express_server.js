@@ -60,15 +60,19 @@ app.get("/", (req, res) => {
   res.send("Hello!");
 });
 
-// username login field post
-//app.post("/login", (req, res) => {
-  // const templateVars = {
-  //   user: users.id,
-  // };
-//  res.redirect("/urls", templateVars);
-//});
+// user login field post
+app.post("/login", (req, res) => {
+  userID = emailLookup(req.body.email);
+  if (!userID) {
+    return res.status(403).send("Email not found");
+  } else if (req.body.password !== users[userID].password) {
+    return res.status(403).send("Incorrect password");
+  }
+  res.cookie('user_id', users[userID]);
+  res.redirect("/urls");
+});
 
-// username logout field post
+// user logout field post
 app.post("/logout", (req, res) => {
   res.clearCookie('user_id');
   res.redirect("/urls");
@@ -93,8 +97,8 @@ app.post("/register", (req, res) => {
   const id = generateRandomString();
   const email = req.body.email;
   const password = req.body.password;
-  users.id = { id, email, password };
-  res.cookie('user_id', users.id);
+  users[id] = { id, email, password };
+  res.cookie('user_id', users[id]);
   res.redirect("/urls");
 });
 
