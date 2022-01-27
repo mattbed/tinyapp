@@ -10,8 +10,14 @@ app.set("view engine", "ejs");
 
 // test url database
 const urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+  "b2xVn2": {
+    longURL: "http://www.lighthouselabs.ca",
+    userID: "userRandomID",
+  },
+  "9sm5xK": {
+    longURL: "http://www.google.com",
+    userID: "user2RandomID",
+  }
 };
 
 // test users database
@@ -127,17 +133,24 @@ app.get("/urls", (req, res) => {
 
 // create new URLs page post
 app.post("/urls", (req, res) => {
+  if (!req.cookies["user_id"]) {
+    return res.status(403).send('Please login or register first');
+  }
   const longURLObj = req.body;
   if (!longURLObj['longURL'].includes("http://")) {
     longURLObj['longURL'] = "http://" + longURLObj['longURL'];
   }
   const shortURL = generateRandomString();
-  urlDatabase[shortURL] = longURLObj['longURL'];
+  urlDatabase[shortURL] = {longURL: longURLObj['longURL'], userID: req.cookies["user_id"].id,};
+  console.log(urlDatabase);
   res.redirect(`/urls/${shortURL}`);
 });
 
 // list of new URLs page get
 app.get("/urls/new", (req, res) => {
+  if (!req.cookies["user_id"]) {
+    return res.redirect("/login");
+  }
   const templateVars = {
     user: req.cookies["user_id"],
   };
@@ -156,7 +169,7 @@ app.post("/urls/:shortURL", (req, res) => {
   if (!longURLObj['longURL'].includes("http://")) {
     longURLObj['longURL'] = "http://" + longURLObj['longURL'];
   }
-  urlDatabase[req.params.shortURL] = longURLObj['longURL'];
+  urlDatabase[req.params.shortURL].longURL = longURLObj['longURL'];
   res.redirect(`/urls/${req.params.shortURL}`);
 });
 
@@ -165,14 +178,17 @@ app.get("/urls/:shortURL", (req, res) => {
   const templateVars = {
     user: req.cookies["user_id"],
     shortURL: req.params.shortURL,
-    longURL: urlDatabase[req.params.shortURL]
+    longURL: urlDatabase[req.params.shortURL].longURL,
   };
   res.render("urls_show", templateVars);
 });
 
 // redirects short URLs to their longURLs
 app.get("/u/:shortURL", (req, res) => {
-  const longURL = urlDatabase[req.params.shortURL];
+  if (!urlDatabase[req.params.shortURL]) {
+    return res.status(404).send("The dreaded 404 file not found");
+  };
+  const longURL = urlDatabase[req.params.shortURL].longURL;
   res.redirect(longURL);
 });
 
