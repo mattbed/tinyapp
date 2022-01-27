@@ -4,7 +4,7 @@ const app = express();
 const PORT = 8080;
 const cookieSession = require('cookie-session')
 const bcrypt = require('bcryptjs');
-const { emailLookup } = require('./helpers');
+const { emailLookup, generateRandomString, urlsForUser } = require('./helpers');
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
@@ -40,37 +40,6 @@ const users = {
     email: "user2@example.com", 
     password: bcrypt.hashSync("dishwasher-funk", 10)
   }
-};
-
-// random string generator for shortURL
-// module this?
-function generateRandomString() {
-  const characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-  let randomString;
-  for (let i = 0; i < 6; i++) {
-    let index = Math.floor(Math.random() * 62);
-    if (!randomString) {
-      randomString = characters[index];
-    } else {
-      randomString += characters[index];
-    }
-  }
-  return randomString;
-};
-
-// sorts urls created by user
-// module this?
-const urlsForUser = (id) => {
-  if (!id) {
-    return undefined;
-  }
-  let output = {};
-  for (let element of Object.keys(urlDatabase)) {
-    if (urlDatabase[element].userID === id) {
-      output[element] = urlDatabase[element];
-    }
-  }
-  return output;
 };
 
 // home page get
@@ -139,7 +108,7 @@ app.post("/register", (req, res) => {
 app.get("/urls", (req, res) => {
   let urlObj = {}
   if (req.session['user_id']) {
-    urlObj = urlsForUser(req.session['user_id'].id);
+    urlObj = urlsForUser(req.session['user_id'].id, urlDatabase);
   };
   const templateVars = { 
     user: req.session['user_id'],
