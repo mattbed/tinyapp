@@ -80,7 +80,7 @@ app.post("/login", (req, res) => {
 // user logout post
 app.post("/logout", (req, res) => {
   // sets cookie to null then redirects to /urls
-  req.session['user_id'] = null;
+  req.session = null;
   res.redirect("/urls");
 });
 
