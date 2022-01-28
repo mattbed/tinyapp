@@ -1,5 +1,5 @@
 const { assert } = require('chai');
-const { emailLookup, generateRandomString, urlsForUser } = require('../helpers.js');
+const { emailLookup, generateRandomString, urlsForUser, urlHTTP } = require('../helpers.js');
 
 
 const testUsers = {
@@ -75,5 +75,19 @@ describe('urlsForUser', function() {
     const expectedOutput = {}
     const test = urlsForUser("userRandomID42", testDB);
     assert.deepEqual(expectedOutput, test);
+  });
+});
+
+describe('urlHTTP', function() {
+
+  it('should return a string containing a url beginning with "http://"', function() {
+    const expectedOutput = "http://www.cbc.ca";
+    const test = urlHTTP("www.cbc.ca");
+    assert.equal(expectedOutput, test);
+  });
+  it('should return a string containing a url beginning with "http://" only if it does not already', function() {
+    const expectedOutput = "http://www.cbc.ca";
+    const test = urlHTTP("http://www.cbc.ca");
+    assert.equal(expectedOutput, test);
   });
 });

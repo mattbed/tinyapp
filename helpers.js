@@ -24,7 +24,7 @@ function generateRandomString() {
   return randomString;
 };
 
-// sorts urls created by user
+// sorts urls created by user into a new object
 const urlsForUser = (id, db) => {
   if (!id) {
     return undefined;
@@ -38,4 +38,12 @@ const urlsForUser = (id, db) => {
   return output;
 };
 
-module.exports = { emailLookup, generateRandomString, urlsForUser };
+// checks to see if input url has 'http://', appends if not
+const urlHTTP = (longURLVar) => {
+  if (!longURLVar.includes("http://")) {
+    longURLVar = "http://" + longURLVar;
+  }
+  return longURLVar;
+};
+
+module.exports = { emailLookup, generateRandomString, urlsForUser, urlHTTP };
