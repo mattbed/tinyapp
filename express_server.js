@@ -195,22 +195,24 @@ app.get("/urls/:shortURL", (req, res) => {
 // Edit url page post
 app.post("/urls/:shortURL", (req, res) => {
   // checks for a cookie || checks if your cookie does not match the id of the affected url
-  if (!req.session['user_id'] || req.session['user_id'].id !== urlDatabase[req.params.shortURL].userID) {
+  const shortURLVar = req.params.shortURL;
+  if (!req.session['user_id'] || req.session['user_id'].id !== urlDatabase[shortURLVar].userID) {
     return res.status(403).send('Oops! You are not permitted to edit this link');
   }
   // if all checks are passed, appends input url with http:// if necessary, updates object with the new url, and redirects to /urls
   const longURLVar = urlHTTP(req.body.longURL);
-  urlDatabase[req.params.shortURL].longURL = longURLVar;
+  urlDatabase[shortURLVar].longURL = longURLVar;
   res.redirect("/urls");
 });
 
 // redirects short URLs to their longURLs
 app.get("/u/:shortURL", (req, res) => {
   // checks if the short url id is accurate, then redirects to it if passed
-  if (!urlDatabase[req.params.shortURL]) {
+  const shortURLVar = req.params.shortURL;
+  if (!urlDatabase[shortURLVar]) {
     return res.status(404).send("The dreaded 404 file not found");
   }
-  const longURL = urlDatabase[req.params.shortURL].longURL;
+  const longURL = urlDatabase[shortURLVar].longURL;
   res.redirect(longURL);
 });
 

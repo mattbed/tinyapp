@@ -4,13 +4,13 @@ const { emailLookup, generateRandomString, urlsForUser, urlHTTP } = require('../
 
 const testUsers = {
   "userRandomID": {
-    id: "userRandomID", 
-    email: "user@example.com", 
+    id: "userRandomID",
+    email: "user@example.com",
     password: "purple-monkey-dinosaur"
   },
   "user2RandomID": {
-    id: "user2RandomID", 
-    email: "user2@example.com", 
+    id: "user2RandomID",
+    email: "user2@example.com",
     password: "dishwasher-funk"
   }
 };
@@ -29,13 +29,13 @@ const testDB = {
 describe('emailLookup', function() {
   
   it('should return a user with valid email', function() {
-    const user = emailLookup("user@example.com", testUsers)
+    const user = emailLookup("user@example.com", testUsers);
     const expectedUserID = "userRandomID";
     assert.equal(user, expectedUserID);
   });
 
   it('should return undefined with invalid email', function() {
-    const user = emailLookup("imadethisup@example.com", testUsers)
+    const user = emailLookup("imadethisup@example.com", testUsers);
     const expectedUserID = undefined;
     assert.equal(user, expectedUserID);
   });
@@ -66,13 +66,13 @@ describe('urlsForUser', function() {
     const expectedOutput = { "b2xVn2": {
       longURL: "http://www.lighthouselabs.ca",
       userID: "userRandomID",
-      },
-    }
+    },
+    };
     const test = urlsForUser("userRandomID", testDB);
     assert.deepEqual(expectedOutput, test);
   });
   it('should return an empty object if no userID matches are found', function() {
-    const expectedOutput = {}
+    const expectedOutput = {};
     const test = urlsForUser("userRandomID42", testDB);
     assert.deepEqual(expectedOutput, test);
   });

@@ -10,7 +10,7 @@ const emailLookup = (email, db) => {
 };
 
 // random string generator for shortURL (6 alphanumeric characters - no checks for duplication)
-function generateRandomString() {
+const generateRandomString = () => {
   const characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
   let randomString;
   for (let i = 0; i < 6; i++) {
